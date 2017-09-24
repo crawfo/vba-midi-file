@@ -101,7 +101,6 @@ Public Function ToThreeBytes(ByVal microsecondsPerQuarterNote As Long) As Collec
 End Function
 
 Public Function ToMicrosecondsPerQuarterNote(ByVal beatsPerMinute As Long) As Long
-    Const MICROSECONDS_PER_MINUTE = 60000000
     ToMicrosecondsPerQuarterNote = MICROSECONDS_PER_MINUTE \ beatsPerMinute
 End Function
 
