@@ -2,7 +2,7 @@ Sub ExampleReadMidiFileIntoDataStructure()
     Dim parsedTracks As Collection
     Dim fileNameFullyQualified As String
 
-    fileNameFullyQualified = "C:\midifile.mid" 'place the correct fully qualified filename here
+    fileNameFullyQualified = "C:\exampleFileName.mid" 'place the correct fully qualified filename here
     Set parsedTracks = ParseMidiFile(fileNameFullyQualified)
     Stop
     'Examine the parsedTracks collection in the View > Locals window.
