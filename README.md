@@ -3,7 +3,7 @@ A set of classes, functions, and methods for reading and writing MIDI files from
 
 Valid MIDI files are assumed.
 
-A Factory module is provided for the safe creation of all MIDI related objects. Most objects are immutable once created.
+A Factory module is provided for the creation of all MIDI related objects. Most objects are immutable once created.
 
 To parse a MIDI file, call the Midi.ParseMidiFile function which will return a collection of tracks each containing MetaEvent, ChannelEvent, or SystemExclusiveEvent objects. 
 
