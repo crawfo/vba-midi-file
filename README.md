@@ -1,7 +1,7 @@
 # vba-midi
 A set of classes, functions, and methods for reading and writing MIDI files from Excel written in VBA.
 
-A Factory module is provided to ensure that, on creation, MIDI related objects are in a valid state.
+A Factory module is provided for the creation of most MIDI related objects. Most MIDI objects are immutable.
 
 To parse a MIDI file, call the Midi.ParseMidiFile function which will return a collection of tracks each containing MetaEvent, ChannelEvent, or SystemExclusiveEvent objects. Valid MIDI files are assumed.
 
