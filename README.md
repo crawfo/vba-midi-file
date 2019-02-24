@@ -15,10 +15,10 @@ Factory.CreateNewMidiFile(ByVal hdrChunk As HeaderChunk, ByVal eventTrks As Even
 To create a MIDI file from scratch:
 1) Create any MIDI event with:
    a) the basic event constructors:
-      Factory.CreateNewChannelEvent, 
-      Factory.CreateNewMetaEvent, 
+      Factory.CreateNewChannelEvent,
+      Factory.CreateNewMetaEvent,
       Factory.CreateNewSystemExclusiveEvent.
-   and 
+      and 
    b) the convenience constructors:
       Factory.CreateNewNoteOnEvent,
       Factory.CreateNewNoteOffEvent,
