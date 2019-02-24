@@ -7,6 +7,8 @@ To parse a MIDI file, call the following factory functions which return the pars
 Factory.CreateNewMidiFileFromArray(midiFileBytes() As Byte)
 Factory.CreateNewMidiFileFromFile(ByVal fileNameFullyQualified As String)
 
+A MidiFile object contains EventTracks objects which contain EventTrack objects which contain ChannelEvent, MetaEvent, and SystemExclusiveEvent objects. The original file bytes can be accessed with the FileBytes property, or regenerated with the ToBytes function.
+
 To create a MIDI file, call the following factory function:
 Factory.CreateNewMidiFile(ByVal hdrChunk As HeaderChunk, ByVal eventTrks As EventTracks).
 
