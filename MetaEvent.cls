@@ -9,24 +9,20 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private pDelta As Long
-Private pTimeStamp As Long
-Private pStatus As Byte
 Private pMetaType As Byte
 Private pMetaTypeName As String
-Private pLength As Long
-Private pData As Collection
+Private pCoreEvent As CoreEvent
 
 Public Property Get Delta() As Long
-    Delta = pDelta
+    Delta = pCoreEvent.Delta
 End Property
 
 Public Property Get TimeStamp() As Long
-    TimeStamp = pTimeStamp
+    TimeStamp = pCoreEvent.TimeStamp
 End Property
 
 Public Property Get Status() As Byte
-    Status = pStatus
+    Status = pCoreEvent.Status
 End Property
 
 Public Property Get MetaType() As Byte
@@ -37,98 +33,91 @@ Public Property Get MetaTypeName() As String
     MetaTypeName = pMetaTypeName
 End Property
 
-Public Property Get Length() As Long
-    Length = pData.Count
+Public Property Get DataLength() As Long
+    DataLength = pCoreEvent.DataLength
 End Property
 
 Public Property Get Data() As Collection
-    Set Data = pData
+    Set Data = pCoreEvent.Data
 End Property
 
-Public Sub Initialize(ByVal deltaTime As Long, ByVal absoluteTime As Long, ByVal metaTypeByte As Byte, ByVal eventData As Collection)
-    'side effect: mutates object properties
-    pDelta = deltaTime
-    pTimeStamp = absoluteTime
-    pStatus = &HFF
+Public Property Get EventLength() As Long
+    EventLength = pCoreEvent.EventLength
+End Property
+
+Public Property Get TrackEventBytes() As Collection
+   Set TrackEventBytes = pCoreEvent.TrackEventBytes
+End Property
+
+Public Sub Initialize(ByVal deltaTime As Long, _
+                      ByVal absoluteTime As Long, _
+                      ByVal metaTypeByte As Byte, _
+                      ByVal eventData As Collection)
+    Const MAX_7_BIT_VALUE = 127
+    Dim eventCoreLength As Long
+    Dim midiStatus As Byte
+    Dim lengthVLV() As Byte
+    
+    midiStatus = StatusEnum.META_EVENT
     pMetaType = metaTypeByte
     pMetaTypeName = ToMetaTypeName(metaTypeByte)
-    Set pData = eventData
-    pLength = pData.Count
+    If eventData.Count <= MAX_7_BIT_VALUE Then
+        eventCoreLength = 3
+    Else
+        lengthVLV = Convert.EncodeVLV(eventData.Count)
+        eventCoreLength = UBound(lengthVLV)
+    End If
+    Set pCoreEvent = Factory.CreateNewCoreEvent(deltaTime, _
+                                                absoluteTime, _
+                                                midiStatus, _
+                                                eventData, _
+                                                eventCoreLength)
 End Sub
 
 Public Function ToBytes() As Byte()
-    Dim eventString As String, i As Long, vlvBytes() As Byte, deltaBytes() As Byte
-    Dim eventStrings() As String, eventBytes() As Byte
-    
-    'delta
-    deltaBytes = EncodeVLV(pDelta)
-    For i = 0 To UBound(deltaBytes)
-        eventString = eventString & deltaBytes(i) & ","
-    Next i
-    
-    'status, type
-    eventString = eventString & pStatus & ","
-    eventString = eventString & pMetaType & ","
-   
-    'data len
-    vlvBytes = EncodeVLV(pLength)
-    For i = 0 To UBound(vlvBytes)
-        eventString = eventString & vlvBytes(i) & ","
-    Next i
-    
-    'data in bytes
-    For i = 1 To pLength
-        eventString = eventString & pData(i) & ","
-    Next i
-    
-    'meta evt
-    eventString = Left(eventString, Len(eventString) - 1) 'remove last comma
-    eventStrings = Split(eventString, ",")
-    ReDim eventBytes(UBound(eventStrings))
-    For i = 0 To UBound(eventStrings)
-        eventBytes(i) = CByte(eventStrings(i))
-    Next i
-    
-    ToBytes = eventBytes
+    ToBytes = pCoreEvent.ToBytes(Me)
 End Function
 
 Private Function ToMetaTypeName(ByVal metaTypeByte As Byte) As String
-    'converts MetaType to name: e.g. 7 --> "CuePoint"
     Select Case metaTypeByte
-        Case &H0
+        Case MetaEventTypeEnum.SEQUENCE_NUMBER
             ToMetaTypeName = "SequenceNumber"
-        Case &H1
+        Case MetaEventTypeEnum.TEXT_EVENT
             ToMetaTypeName = "TextEvent"
-        Case &H2
+        Case MetaEventTypeEnum.COPYRIGHT_NOTICE
             ToMetaTypeName = "CopyrightNotice"
-        Case &H3
+        Case MetaEventTypeEnum.SEQUENCE_TRACK_NAME
             ToMetaTypeName = "SequenceTrackName"
-        Case &H4
+        Case MetaEventTypeEnum.INSTRUMENT_NAME
             ToMetaTypeName = "InstrumentName"
-        Case &H5
+        Case MetaEventTypeEnum.LYRICS
             ToMetaTypeName = "Lyrics"
-        Case &H6
+        Case MetaEventTypeEnum.MARKER
             ToMetaTypeName = "Marker"
-        Case &H7
+        Case MetaEventTypeEnum.CUE_POINT
             ToMetaTypeName = "CuePoint"
-        Case &H20
+        Case MetaEventTypeEnum.MIDI_CHANNEL_PREFIX
             ToMetaTypeName = "MidiChannelPrefix"
-        Case &H21
+        Case MetaEventTypeEnum.MIDI_PORT
             ToMetaTypeName = "MidiPort"
-        Case &H2F
+        Case MetaEventTypeEnum.END_OF_TRACK
             ToMetaTypeName = "EndOfTrack"
-        Case &H51
+        Case MetaEventTypeEnum.SET_TEMPO
             ToMetaTypeName = "SetTempo"
-        Case &H54
+        Case MetaEventTypeEnum.SMPTE_OFFSET
             ToMetaTypeName = "SmpteOffset"
-        Case &H58
+        Case MetaEventTypeEnum.TIME_SIGNATURE
             ToMetaTypeName = "TimeSignature"
-        Case &H59
+        Case MetaEventTypeEnum.KEY_SIGNATURE
             ToMetaTypeName = "KeySignature"
-        Case &H7F
+        Case MetaEventTypeEnum.SEQUENCER_SPECIFIC
             ToMetaTypeName = "SequencerSpecific"
         Case Else
             ToMetaTypeName = "UnknownMetaEvent"
     End Select
 End Function
+
+
+
+
 

@@ -9,32 +9,32 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private pDataStart  As Collection
-Private pDataSize  As Collection
-Private pDataEnd  As Collection
+Private pTrackStart  As Collection
+Private pTrackSize  As Collection
+Private pTrackEnd  As Collection
 
-Public Property Get DataStart() As Collection
-    Set DataStart = pDataStart
+Public Property Get TrackStart() As Collection
+    Set TrackStart = pTrackStart
 End Property
 
-Public Property Get DataEnd() As Collection
-    Set DataEnd = pDataEnd
+Public Property Get TrackEnd() As Collection
+    Set TrackEnd = pTrackEnd
 End Property
 
-
-Public Property Get DataSize() As Collection
-    Set DataSize = pDataSize
+Public Property Get TrackSize() As Collection
+    Set TrackSize = pTrackSize
 End Property
 
 Private Sub Class_Terminate()
-    Set pDataStart = Nothing
-    Set pDataEnd = Nothing
-    Set pDataSize = Nothing
+    Set pTrackStart = Nothing
+    Set pTrackEnd = Nothing
+    Set pTrackSize = Nothing
 End Sub
 
-Public Sub Initialize(ByVal dataStartPositions As Collection, ByVal dataEndPositions As Collection, ByVal sizes As Collection)
-    'side effect: mutates object properties
-    Set pDataStart = dataStartPositions
-    Set pDataEnd = dataEndPositions
-    Set pDataSize = sizes
+Public Sub Initialize(ByVal dataStartPositions As Collection, _
+                      ByVal dataEndPositions As Collection, _
+                      ByVal sizes As Collection)
+    Set pTrackStart = dataStartPositions
+    Set pTrackEnd = dataEndPositions
+    Set pTrackSize = sizes
 End Sub

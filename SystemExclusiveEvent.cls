@@ -9,19 +9,15 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Private pDelta As Long
-Private pTimeStamp As Long
 Private pEvtType As SystemExclusiveType
-Private pStatus As Byte
-Private pLength As Long
-Private pData As Collection
+Private pCoreEvent As CoreEvent
 
 Public Property Get Delta() As Long
-    Delta = pDelta
+    Delta = pCoreEvent.Delta
 End Property
 
 Public Property Get TimeStamp() As Long
-    TimeStamp = pTimeStamp
+    TimeStamp = pCoreEvent.TimeStamp
 End Property
 
 Public Property Get EvtType() As SystemExclusiveType
@@ -29,60 +25,49 @@ Public Property Get EvtType() As SystemExclusiveType
 End Property
 
 Public Property Get Status() As Byte
-    Status = pStatus
+    Status = pCoreEvent.Status
 End Property
 
-Public Property Get Length() As Long
-    Length = pData.Count
+Public Property Get DataLength() As Long
+    DataLength = pCoreEvent.DataLength
 End Property
 
 Public Property Get Data() As Collection
-    Set Data = pData
+    Set Data = pCoreEvent.Data
 End Property
 
-Public Sub Initialize(ByVal deltaTime As Long, ByVal absoluteTime As Long, ByVal midiStatus As Byte, ByVal eventData As Collection, ByVal syxType As SystemExclusiveType)
-    'side effect: mutates object properties
-    pDelta = deltaTime
-    pTimeStamp = absoluteTime
-    pStatus = midiStatus
-    Set pData = eventData
+Public Property Get EventLength() As Long
+    EventLength = pCoreEvent.EventLength
+End Property
+
+Public Property Get TrackEventBytes() As Collection
+    Set TrackEventBytes = pCoreEvent.TrackEventBytes
+End Property
+
+Public Sub Initialize(ByVal deltaTime As Long, _
+                      ByVal absoluteTime As Long, _
+                      ByVal midiStatus As Byte, _
+                      ByVal eventData As Collection, _
+                      ByVal syxType As SystemExclusiveType)
+    Const MAX_7_BIT_VALUE = 127
+    Dim eventCoreLength As Long
+    Dim lengthVLV() As Byte
+    
     pEvtType = syxType
-    pLength = pData.Count
+    If eventData.Count <= MAX_7_BIT_VALUE Then
+        eventCoreLength = 2
+    Else
+        lengthVLV = Convert.EncodeVLV(eventData.Count)
+        eventCoreLength = UBound(lengthVLV)
+    End If
+    Set pCoreEvent = CreateNewCoreEvent(deltaTime, _
+                                        absoluteTime, _
+                                        midiStatus, _
+                                        eventData, _
+                                        eventCoreLength)
 End Sub
 
 Public Function ToBytes() As Byte()
-    Dim eventString As String, i As Long, vlvBytes() As Byte, deltaBytes() As Byte
-    Dim eventStrings() As String, eventBytes() As Byte
-    
-    'delta
-    deltaBytes = EncodeVLV(pDelta)
-    For i = 0 To UBound(deltaBytes)
-        eventString = eventString & deltaBytes(i) & ","
-    Next i
-    
-    'status
-    eventString = eventString & pStatus & ","
-       
-    'data len
-    vlvBytes = EncodeVLV(pLength)
-    For i = 0 To UBound(vlvBytes)
-        eventString = eventString & vlvBytes(i) & ","
-    Next i
-    
-    'data in bytes
-    For i = 1 To pLength
-        eventString = eventString & pData(i) & ","
-    Next i
-    
-    'syx evt
-    eventString = Left(eventString, Len(eventString) - 1) 'remove last comma
-    eventStrings = Split(eventString, ",")
-    ReDim eventBytes(UBound(eventStrings))
-    For i = 0 To UBound(eventStrings)
-        eventBytes(i) = CByte(eventStrings(i))
-    Next i
-    
-    ToBytes = eventBytes
+    ToBytes = pCoreEvent.ToBytes(Me)
 End Function
-
 
