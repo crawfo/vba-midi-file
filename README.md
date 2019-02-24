@@ -1,11 +1,36 @@
 # vba-midi
 A set of classes, functions, and methods for reading and writing MIDI files from Excel written in VBA.
 
-A Factory module is provided for the creation of most MIDI related objects. Most MIDI objects are immutable.
+A factory module is used for the creation of objects. Most objects are immutable.
 
-To parse a MIDI file, call the Midi.ParseMidiFile function which will return a collection of tracks each containing MetaEvent, ChannelEvent, or SystemExclusiveEvent objects. Valid MIDI files are assumed.
+To parse a MIDI file, call the following factory functions which return the parsed MIDI bytes as a MidiFile object:
+Factory.CreateNewMidiFileFromArray(midiFileBytes() As Byte)
+Factory.CreateNewMidiFileFromFile(ByVal fileNameFullyQualified As String)
 
-Creating a MIDI file is left to the implementor to ensure validity and requires the creation of a TrackCollection object of TrackChunks. The TrackCollection is then passed to the Factory.CreateStandardMidiFile function to create a StandardMidiFile object.
-StandardMidiFile objects contain a Write method which will write the object to disk as a MIDI file when invoked.
+To create a MIDI file, call the following factory function:
+Factory.CreateNewMidiFile(ByVal hdrChunk As HeaderChunk, ByVal eventTrks As EventTracks).
 
-The examples.bas module currently provides an example of usage for the Midi.ParseMidiFile function, called ExampleReadMidiFileIntoDataStructure.
+To create a MIDI file from scratch:
+1) Create any MIDI event with:
+   a) the basic event constructors:
+      Factory.CreateNewChannelEvent, 
+      Factory.CreateNewMetaEvent, 
+      Factory.CreateNewSystemExclusiveEvent.
+   and 
+   b) the convenience constructors:
+      Factory.CreateNewNoteOnEvent,
+      Factory.CreateNewNoteOffEvent,
+      Factory.CreateNewNoteAftertouchEvent,
+      Factory.CreateNewControlChangeEvent,
+      Factory.CreateNewChannelAftertouchEvent,
+      Factory.CreateNewPitchBendEvent,
+      Factory.CreateNewProgramChangeEvent,
+      Factory.CreateNewTimeSignatureMetaEvent,
+      Factory.CreateNewKeySignatureMetaEvent.
+   
+2) Add all events to a collection.
+3) Create an EventTrack object with Factory.CreateNewEventTrack(ByVal trkEvents As Collection).
+4) Create an EventTracks object with Factory.CreateNewEventTracks(ByVal eventTrks As Collection).
+5) Create a HeaderChunk object with Factory.CreateNewHeaderChunk
+6) Create an MidiFile object with Factory.CreateNewMidiFile(ByVal hdrChunk As HeaderChunk, ByVal eventTrks As EventTracks).
+7) To save a MidiFile object as a standard midi file use the FileUtils.WriteToDisk(bytes() As Byte, ByVal fileNameFullyQualified As String) function, passing MidiFile.FileBytes as the bytes parameter.
