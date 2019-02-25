@@ -45,8 +45,24 @@ To create a MIDI file from scratch:
          Factory.CreateNewKeySignatureMetaEvent.
    
 2) Add all events to a collection.
-3) Create an EventTrack object with Factory.CreateNewEventTrack(ByVal trkEvents As Collection).
-4) Create an EventTracks object with Factory.CreateNewEventTracks(ByVal eventTrks As Collection).
-5) Create a HeaderChunk object with Factory.CreateNewHeaderChunk
-6) Create an MidiFile object with Factory.CreateNewMidiFile(ByVal hdrChunk As HeaderChunk, ByVal eventTrks As EventTracks).
-7) To save a MidiFile object as a standard midi file use the FileUtils.WriteToDisk(bytes() As Byte, ByVal fileNameFullyQualified As String) function, passing MidiFile.FileBytes as the bytes parameter.
+3) Create an EventTrack object with 
+
+            Factory.CreateNewEventTrack(ByVal trkEvents As Collection).
+            
+4) Create an EventTracks object with 
+            
+            Factory.CreateNewEventTracks(ByVal eventTrks As Collection).
+            
+5) Create a HeaderChunk object with 
+
+            Factory.CreateNewHeaderChunk.
+            
+6) Create an MidiFile object with
+            
+            Factory.CreateNewMidiFile(ByVal hdrChunk As HeaderChunk, ByVal eventTrks As EventTracks).
+            
+7) To save a MidiFile object as a standard midi file use the 
+            
+            FileUtils.WriteToDisk(bytes() As Byte, ByVal fileNameFullyQualified As String) function,
+            
+   passing MidiFile.FileBytes as the bytes parameter.
