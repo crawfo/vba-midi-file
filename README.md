@@ -9,7 +9,15 @@ To parse a MIDI file, call the following factory functions which return the pars
 
       Factory.CreateNewMidiFileFromFile(ByVal fileNameFullyQualified As String)
 
-A MidiFile object contains an EventTracks object which contains EventTrack objects which contain ChannelEvent, MetaEvent, and SystemExclusiveEvent objects. The original file bytes can be accessed with the FileBytes property.
+A MidiFile object contains an EventTracks object which contains EventTrack objects which contain 
+
+      ChannelEvent,
+      
+      MetaEvent,
+      
+      SystemExclusiveEvent 
+      
+objects. The original file bytes can be accessed with the FileBytes property.
 
 To create a MIDI file from scratch:
 1) Create any MIDI event with:
@@ -63,6 +71,6 @@ To create a MIDI file from scratch:
             
 7) To save a MidiFile object as a standard midi file use the 
             
-            FileUtils.WriteToDisk(bytes() As Byte, ByVal fileNameFullyQualified As String) function,
+            FileUtils.WriteToDisk(bytes() As Byte, ByVal fileNameFullyQualified As String) 
             
-   passing MidiFile.FileBytes as the bytes parameter.
+   function, passing MidiFile.FileBytes as the bytes parameter.
