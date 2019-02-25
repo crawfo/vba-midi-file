@@ -4,13 +4,12 @@ A set of classes, functions, and methods for reading and writing MIDI files from
 A factory module is used for the creation of objects. Most objects are immutable.
 
 To parse a MIDI file, call the following factory functions which return the parsed MIDI bytes as a MidiFile object:
-   Factory.CreateNewMidiFileFromArray(midiFileBytes() As Byte), 
-   Factory.CreateNewMidiFileFromFile(ByVal fileNameFullyQualified As String)
+
+Factory.CreateNewMidiFileFromArray(midiFileBytes() As Byte), 
+
+Factory.CreateNewMidiFileFromFile(ByVal fileNameFullyQualified As String)
 
 A MidiFile object contains an EventTracks object which contains EventTrack objects which contain ChannelEvent, MetaEvent, and SystemExclusiveEvent objects. The original file bytes can be accessed with the FileBytes property.
-
-To create a MIDI file, call the following factory function:
-Factory.CreateNewMidiFile(ByVal hdrChunk As HeaderChunk, ByVal eventTrks As EventTracks).
 
 To create a MIDI file from scratch:
 1) Create any MIDI event with:
