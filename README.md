@@ -16,33 +16,33 @@ To create a MIDI file from scratch:
 
    a) the basic event constructors:
    
-      Factory.CreateNewChannelEvent,
+         Factory.CreateNewChannelEvent,
+
+         Factory.CreateNewMetaEvent,
+
+         Factory.CreateNewSystemExclusiveEvent.
       
-      Factory.CreateNewMetaEvent,
-      
-      Factory.CreateNewSystemExclusiveEvent.
-      
-      and 
+      and/or,
       
    b) the convenience constructors:
    
-      Factory.CreateNewNoteOnEvent,
-      
-      Factory.CreateNewNoteOffEvent,
-      
-      Factory.CreateNewNoteAftertouchEvent,
-      
-      Factory.CreateNewControlChangeEvent,
-      
-      Factory.CreateNewChannelAftertouchEvent,
-      
-      Factory.CreateNewPitchBendEvent,
-      
-      Factory.CreateNewProgramChangeEvent,
-      
-      Factory.CreateNewTimeSignatureMetaEvent,
-      
-      Factory.CreateNewKeySignatureMetaEvent.
+         Factory.CreateNewNoteOnEvent,
+
+         Factory.CreateNewNoteOffEvent,
+
+         Factory.CreateNewNoteAftertouchEvent,
+
+         Factory.CreateNewControlChangeEvent,
+
+         Factory.CreateNewChannelAftertouchEvent,
+
+         Factory.CreateNewPitchBendEvent,
+
+         Factory.CreateNewProgramChangeEvent,
+
+         Factory.CreateNewTimeSignatureMetaEvent,
+
+         Factory.CreateNewKeySignatureMetaEvent.
    
 2) Add all events to a collection.
 3) Create an EventTrack object with Factory.CreateNewEventTrack(ByVal trkEvents As Collection).
