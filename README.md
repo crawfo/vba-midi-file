@@ -74,3 +74,6 @@ To create a MIDI file from scratch:
             FileUtils.WriteToDisk(bytes() As Byte, ByVal fileNameFullyQualified As String) 
             
    function, passing MidiFile.FileBytes as the bytes parameter.
+
+To read a MIDI file into an Excel worksheet:
+             FileUtils.ImportToSheet(fileNameFullyQualified As String, sheetName As String)
