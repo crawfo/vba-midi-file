@@ -1,4 +1,4 @@
-# vba-midi
+# vba-midi-file
 A set of classes, functions, and methods for reading and writing MIDI files from Excel written in VBA.
 
 A factory module is used for the creation of objects. Most objects are immutable.
